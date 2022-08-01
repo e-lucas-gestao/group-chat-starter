@@ -3,6 +3,24 @@ import io from "socket.io-client";
 import Peer from "simple-peer";
 import styled from "styled-components";
 
+const  iceServers = [{
+   urls: [ "stun:sp-turn1.xirsys.com" ],
+   iceTransportPolicy:"relay"
+}, {
+   username: "Djp82iI89nDEO3wi3yZtnbAYvr8yQwNQGQg00zCEIX2XnIHxK5roNG9me1h3YYsyAAAAAGLgN0xzZXlhZGVvZGlu",
+   credential: "b99aff74-0d13-11ed-b464-0242ac120004",
+   urls: [
+       "turn:sp-turn1.xirsys.com:80?transport=udp",
+       "turn:sp-turn1.xirsys.com:3478?transport=udp",
+       "turn:sp-turn1.xirsys.com:80?transport=tcp",
+       "turn:sp-turn1.xirsys.com:3478?transport=tcp",
+       "turns:sp-turn1.xirsys.com:443?transport=tcp",
+       "turns:sp-turn1.xirsys.com:5349?transport=tcp"
+   ]
+   
+}]
+
+
 const Container = styled.div`
     padding: 20px;
     display: flex;
@@ -23,6 +41,7 @@ const Video = (props) => {
   useEffect(() => {
     props.peer.on("stream", stream => {
       ref.current.srcObject = stream;
+      console.log(ref.current.srcObject)
     })
   }, []);
 
@@ -94,6 +113,7 @@ const Room = (props) => {
       initiator: true,
       trickle: false,
       stream,
+      config: { iceServers }
     });
 
     peer.on("signal", signal => {
@@ -108,6 +128,7 @@ const Room = (props) => {
       initiator: false,
       trickle: false,
       stream,
+      config: iceServers,
     })
 
     peer.on("signal", signal => {
